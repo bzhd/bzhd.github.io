@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>身高体重查询</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 40px 20px;
+            font-family:
+                "Microsoft YaHei",
+                "PingFang SC",
+                Arial,
+                sans-serif;
+            background: #f5f7fa;
+            color: #333;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+        }
+
+        h1 {
+            margin-top: 0;
+            text-align: center;
+            font-size: 26px;
+        }
+
+        .query-box {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            align-items: end;
+            margin-bottom: 30px;
+        }
+
+        .form-item {
+            flex: 1;
+            min-width: 180px;
+        }
+
+        .form-item label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .form-item input {
+            width: 100%;
+            height: 42px;
+            padding: 0 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+
+        button {
+            height: 42px;
+            padding: 0 30px;
+            border: none;
+            border-radius: 6px;
+            background: #1677ff;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0958d9;
+        }
+
+        .message {
+            margin: 15px 0;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+
+        th {
+            background: #f0f2f5;
+        }
+
+        .success {
+            color: #00875a;
+        }
+
+        .error {
+            color: #d4380d;
+        }
+
+        .detail {
+            margin-top: 5px;
+            font-size: 13px;
+            color: #666;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>身高体重查询</h1>
+
+    <div class="query-box">
+
+        <div class="form-item">
+            <label for="height">身高</label>
+            <input
+                id="height"
+                type="number"
+                step="0.01"
+                placeholder="请输入身高"
+                value="32"
+            >
+        </div>
+
+        <div class="form-item">
+            <label for="weight">体重</label>
+            <input
+                id="weight"
+                type="number"
+                step="0.01"
+                placeholder="请输入体重"
+                value="4510"
+            >
+        </div>
+
+        <button onclick="queryData()">查询</button>
+
+    </div>
+
+    <div id="message" class="message"></div>
+
+    <div id="result"></div>
+
+</div>
+
+<script>
+
+/*
+ * =====================================================
+ * JSON 数据
+ * =====================================================
+ *
+ * 对应 Excel：
+ *
+ * name       -> A列
+ * lowheight  -> B列
+ * highheight -> C列
+ * lowweight  -> D列
+ * highweight -> E列
+ *
+ */
+
+const data = [
+
+    {
+        "name": "迪莫",
+        "lowheight": 23,
+        "highheight": 32,
+        "lowweight": 1925,
+        "highweight": 2800
+    },
+
+    {
+        "name": "喵喵",
+        "lowheight": 23,
+        "highheight": 31,
+        "lowweight": 1267,
+        "highweight": 1840
+    },
+
+    {
+        "name": "火花",
+        "lowheight": 23,
+        "highheight": 29,
+        "lowweight": 2660,
+        "highweight": 3400
+    },
+
+    {
+        "name": "水蓝蓝",
+        "lowheight": 19,
+        "highheight": 27,
+        "lowweight": 998,
+        "highweight": 1360
+    },
+
+    {
+        "name": "鸭吉吉",
+        "lowheight": 28,
+        "highheight": 39,
+        "lowweight": 5110,
+        "highweight": 7040
+    },
+
+    {
+        "name": "板板壳",
+        "lowheight": 23,
+        "highheight": 32,
+        "lowweight": 2625,
+        "highweight": 4200
+    },
+
+    {
+        "name": "锋尾羊",
+        "lowheight": 24,
+        "highheight": 34,
+        "lowweight": 4655,
+        "highweight": 6600
+    },
+
+    {
+        "name": "雪绒鸟",
+        "lowheight": 16,
+        "highheight": 21,
+        "lowweight": 970,
+        "highweight": 1800
+    },
+
+    {
+        "name": "小灵菇",
+        "lowheight": 18,
+        "highheight": 25,
+        "lowweight": 1890,
+        "highweight": 2840
+    },
+
+    {
+        "name": "石肤蜥",
+        "lowheight": 21,
+        "highheight": 29,
+        "lowweight": 7350,
+        "highweight": 13600
+    },
+
+    {
+        "name": "布是石",
+        "lowheight": 18,
+        "highheight": 25,
+        "lowweight": 6475,
+        "highweight": 13000
+    },
+
+    {
+        "name": "恶魔叮",
+        "lowheight": 17,
+        "highheight": 23,
+        "lowweight": 1260,
+        "highweight": 1640
+    },
+
+    {
+        "name": "毛毛",
+        "lowheight": 13,
+        "highheight": 19,
+        "lowweight": 1050,
+        "highweight": 1800
+    },
+
+    {
+        "name": "幽影树",
+        "lowheight": 27,
+        "highheight": 38,
+        "lowweight": 10325,
+        "highweight": 15000
+    },
+
+    {
+        "name": "小鼠獭",
+        "lowheight": 16,
+        "highheight": 22,
+        "lowweight": 2345,
+        "highweight": 3000
+    },
+
+    {
+        "name": "矿晶虫",
+        "lowheight": 23,
+        "highheight": 32,
+        "lowweight": 2030,
+        "highweight": 2520
+    },
+
+    {
+        "name": "奇丽草",
+        "lowheight": 16,
+        "highheight": 23,
+        "lowweight": 1435,
+        "highweight": 2280
+    },
+
+    {
+        "name": "丢丢",
+        "lowheight": 15,
+        "highheight": 21,
+        "lowweight": 1505,
+        "highweight": 2440
+    },
+
+    {
+        "name": "护主犬",
+        "lowheight": 27,
+        "highheight": 38,
+        "lowweight": 4760,
+        "highweight": 7000
+    },
+
+    {
+        "name": "小狮鹫",
+        "lowheight": 30,
+        "highheight": 42,
+        "lowweight": 4025,
+        "highweight": 7000
+    }
+
+];
+
+
+/*
+ * =====================================================
+ * 查询函数
+ * =====================================================
+ */
+
+function queryData() {
+
+    const height =
+        Number(document.getElementById("height").value);
+
+    const weight =
+        Number(document.getElementById("weight").value);
+
+    const message =
+        document.getElementById("message");
+
+    const result =
+        document.getElementById("result");
+
+
+    /*
+     * 检查输入
+     */
+
+    if (
+        !Number.isFinite(height) ||
+        !Number.isFinite(weight)
+    ) {
+
+        message.className = "message error";
+        message.textContent =
+            "请输入有效的身高和体重。";
+
+        result.innerHTML = "";
+
+        return;
+    }
+
+
+    /*
+     * =================================================
+     * 对应 Excel FILTER 条件
+     * =================================================
+     */
+
+    const matches = data
+        .map(item => {
+
+            const {
+                name,
+                lowheight,
+                highheight,
+                lowweight,
+                highweight
+            } = item;
+
+
+            /*
+             * 防止 highheight == lowheight
+             * 相当于 Excel 中的 IFERROR
+             */
+
+            const denominator =
+                highheight - lowheight;
+
+            if (denominator === 0) {
+                return null;
+            }
+
+
+            /*
+             * 第一个线性值
+             *
+             * D +
+             * (H8 - 0.5 - B)
+             * ×
+             * (E - D)
+             * /
+             * (C - B)
+             */
+
+            const lineMinus =
+                lowweight +
+                (height - 0.5 - lowheight) *
+                (highweight - lowweight) /
+                denominator;
+
+
+            /*
+             * 第二个线性值
+             *
+             * D +
+             * (H8 + 0.5 - B)
+             * ×
+             * (E - D)
+             * /
+             * (C - B)
+             */
+
+            const linePlus =
+                lowweight +
+                (height + 0.5 - lowheight) *
+                (highweight - lowweight) /
+                denominator;
+
+
+            /*
+             * Excel：
+             *
+             * (H8 > B)
+             * *
+             * (H8 < C)
+             * *
+             * (J8 > D)
+             * *
+             * (J8 < E)
+             * *
+             * (J8 > lineMinus)
+             * *
+             * (J8 > linePlus)
+             */
+
+            const matched =
+                height > lowheight &&
+                height < highheight &&
+                weight > lowweight &&
+                weight < highweight &&
+                weight > lineMinus &&
+                weight > linePlus;
+
+
+            if (!matched) {
+                return null;
+            }
+
+
+            return {
+                ...item,
+                lineMinus,
+                linePlus
+            };
+
+        })
+        .filter(Boolean);
+
+
+    /*
+     * =================================================
+     * 显示结果
+     * =================================================
+     */
+
+    if (matches.length === 0) {
+
+        message.className = "message error";
+
+        message.textContent =
+            "无匹配结果";
+
+        result.innerHTML = "";
+
+        return;
+    }
+
+
+    message.className = "message success";
+
+    message.textContent =
+        `共找到 ${matches.length} 条匹配结果`;
+
+
+    let html = `
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>名称</th>
+                    <th>最低身高</th>
+                    <th>最高身高</th>
+                    <th>最低体重</th>
+                    <th>最高体重</th>
+                    <th>H-0.5线性值</th>
+                    <th>H+0.5线性值</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+    `;
+
+
+    matches.forEach(item => {
+
+        html += `
+
+            <tr>
+
+                <td>${item.name}</td>
+
+                <td>${item.lowheight}</td>
+
+                <td>${item.highheight}</td>
+
+                <td>${item.lowweight}</td>
+
+                <td>${item.highweight}</td>
+
+                <td>
+                    ${item.lineMinus.toFixed(2)}
+                </td>
+
+                <td>
+                    ${item.linePlus.toFixed(2)}
+                </td>
+
+            </tr>
+        `;
+
+    });
+
+
+    html += `
+
+            </tbody>
+
+        </table>
+    `;
+
+
+    result.innerHTML = html;
+
+}
+
+
+/*
+ * 回车直接查询
+ */
+
+document.addEventListener(
+    "keydown",
+    function(event) {
+
+        if (event.key === "Enter") {
+            queryData();
+        }
+
+    }
+);
+
+
+/*
+ * 页面打开时自动查询默认值
+ */
+
+queryData();
+
+</script>
+
+</body>
+</html>
