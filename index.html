@@ -279,11 +279,9 @@
             #result td:nth-child(3)::before { content: "最高身高"; }
             #result td:nth-child(4)::before { content: "最低体重"; }
             #result td:nth-child(5)::before { content: "最高体重"; }
-            #result td:nth-child(6)::before { content: "H-0.5线性值"; }
-            #result td:nth-child(7)::before { content: "H+0.5线性值"; }
-			#result td:nth-child(7)::before { content: "孵蛋时长(分钟)"; }
+			#result td:nth-child(6)::before { content: "孵蛋时长(分钟)"; }
 			#result td:nth-child(7)::before { content: "周内风场(分钟)"; }
-			#result td:nth-child(7)::before { content: "周末风场(分钟)"; }
+			#result td:nth-child(8)::before { content: "周末风场(分钟)"; }
 
             #result td:first-child {
                 padding-top: 0;
@@ -726,8 +724,6 @@ function queryData() {
                     <th>最高身高</th>
                     <th>最低体重</th>
                     <th>最高体重</th>
-                    <th>H-0.5线性值</th>
-                    <th>H+0.5线性值</th>
 					<th>孵蛋时长(分钟)</th>
 					<th>周内风场(分钟)</th>
 					<th>周末风场(分钟)</th>
@@ -754,17 +750,11 @@ function queryData() {
                 <td>${item.lowweight}</td>
 
                 <td>${item.highweight}</td>
-
-                <td>
-                    ${item.lineMinus.toFixed(2)}
-                </td>
-
-                <td>
-                    ${item.linePlus.toFixed(2)}
-                </td>
 				
 				<td>${item.hatchdata}</td>
+				
 				<td>${item.hatchdata/6}</td>
+				
 				<td>${item.hatchdata/30}</td>
 
             </tr>
