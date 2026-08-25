@@ -275,13 +275,11 @@
             }
 
             #result td:nth-child(1)::before { content: "名称"; }
-            #result td:nth-child(2)::before { content: "最低身高"; }
-            #result td:nth-child(3)::before { content: "最高身高"; }
-            #result td:nth-child(4)::before { content: "最低体重"; }
-            #result td:nth-child(5)::before { content: "最高体重"; }
-			#result td:nth-child(6)::before { content: "孵蛋时长(分钟)"; }
-			#result td:nth-child(7)::before { content: "周内风场(分钟)"; }
-			#result td:nth-child(8)::before { content: "周末风场(分钟)"; }
+            #result td:nth-child(2)::before { content: "身高"; }
+            #result td:nth-child(3)::before { content: "体重"; }
+			#result td:nth-child(4)::before { content: "孵蛋时长(分钟)"; }
+			#result td:nth-child(5)::before { content: "周内风场(分钟)"; }
+			#result td:nth-child(6)::before { content: "周末风场(分钟)"; }
 
             #result td:first-child {
                 padding-top: 0;
@@ -628,6 +626,7 @@ function queryData() {
                 (highweight - lowweight) /
                 denominator;
 
+			lineMinus = lineMinus -（highweight-lowweight）* 0.02
 
             /*
              * 第二个线性值
@@ -646,6 +645,7 @@ function queryData() {
                 (highweight - lowweight) /
                 denominator;
 
+			linePlus = linePlus +（highweight-lowweight）* 0.02
 
             /*
              * Excel：
@@ -720,10 +720,8 @@ function queryData() {
 
                 <tr>
                     <th>名称</th>
-                    <th>最低身高</th>
-                    <th>最高身高</th>
-                    <th>最低体重</th>
-                    <th>最高体重</th>
+                    <th>身高</th>
+                    <th>体重</th>
 					<th>孵蛋时长(分钟)</th>
 					<th>周内风场(分钟)</th>
 					<th>周末风场(分钟)</th>
@@ -743,13 +741,9 @@ function queryData() {
 
                 <td>${item.name}</td>
 
-                <td>${item.lowheight}</td>
+                <td>${item.lowheight}~${item.highheight}</td>
 
-                <td>${item.highheight}</td>
-
-                <td>${item.lowweight}</td>
-
-                <td>${item.highweight}</td>
+                <td>${item.lowweight}~${item.highweight}</td>
 				
 				<td>${item.hatchdata}</td>
 				
