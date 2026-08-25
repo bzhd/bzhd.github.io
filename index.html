@@ -275,8 +275,8 @@
             }
 
             #result td:nth-child(1)::before { content: "名称"; }
-            #result td:nth-child(2)::before { content: "身高"; }
-            #result td:nth-child(3)::before { content: "体重"; }
+            #result td:nth-child(2)::before { content: "身高(m)"; }
+            #result td:nth-child(3)::before { content: "体重(kg)"; }
 			#result td:nth-child(4)::before { content: "孵蛋时长(分钟)"; }
 			#result td:nth-child(5)::before { content: "周内风场(分钟)"; }
 			#result td:nth-child(6)::before { content: "周末风场(分钟)"; }
@@ -315,7 +315,7 @@
     <div class="query-box">
 
         <div class="form-item">
-            <label for="height">身高</label>
+            <label for="height">身高(m)</label>
             <input
                 id="height"
                 type="number"
@@ -325,7 +325,7 @@
         </div>
 
         <div class="form-item">
-            <label for="weight">体重</label>
+            <label for="weight">体重(kg)</label>
             <input
                 id="weight"
                 type="number"
@@ -741,9 +741,9 @@ function queryData() {
 
                 <td>${item.name}</td>
 
-                <td>${item.lowheight}~${item.highheight}</td>
+                <td>${item.lowheight/100}~${item.highheight/100}</td>
 
-                <td>${item.lowweight}~${item.highweight}</td>
+                <td>${item.lowweight/1000}~${item.highweight/1000}</td>
 				
 				<td>${item.hatchdata}</td>
 				
