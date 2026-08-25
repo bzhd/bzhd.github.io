@@ -624,9 +624,9 @@ function queryData() {
                 lowweight +
                 (height - 0.5 - lowheight) *
                 (highweight - lowweight) /
-                denominator;
+                denominator
+				 - (highweight - lowweight) * 0.02;
 
-			lineMinus = lineMinus -（highweight-lowweight）* 0.02
 
             /*
              * 第二个线性值
@@ -643,9 +643,9 @@ function queryData() {
                 lowweight +
                 (height + 0.5 - lowheight) *
                 (highweight - lowweight) /
-                denominator;
+                denominator
+				 - (highweight - lowweight) * 0.02;
 
-			linePlus = linePlus +（highweight-lowweight）* 0.02
 
             /*
              * Excel：
